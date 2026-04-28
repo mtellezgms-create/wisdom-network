@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Wisdom Network</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #2c1a06;
+      color: #e0c080;
+      font-family: Georgia, 'Times New Roman', serif;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: #1a0e00;
+      border-bottom: 0.5px solid #4a2e08;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f0c050;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #d4a832;
+      text-decoration: none;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #f0c050; }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #f0c050;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      background: #1a0e00;
+      border-top: 0.5px solid #4a2e08;
+      padding: 1rem 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: #d4a832;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.4rem 0;
+      border-bottom: 0.5px solid #2c1a06;
+    }
+    .mobile-menu a:hover { color: #f0c050; }
+
+    /* ── HERO ── */
+    .hero {
+      background: #1a0e00;
+      border-top: 2px solid #c8841a;
+      box-shadow: 0 0 40px 4px rgba(200,132,26,0.18);
+      padding: 3.5rem 1.5rem;
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .medallion-placeholder {
+      width: 113px;
+      height: 113px;
+      border-radius: 50%;
+      border: 2.5px solid #c8841a;
+      background: #2c1a06;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #5a3510;
+      font-size: 0.65rem;
+      text-align: center;
+      padding: 8px;
+    }
+    .hero-medallions-row {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 1.8rem;
+      flex-wrap: wrap;
+    }
+    .hero-medallions-row img {
+      width: 113px;
+      height: 113px;
+      border-radius: 50%;
+      border: 2.5px solid #c8841a;
+      object-fit: cover;
+      display: block;
+      background: #2c1a06;
+    }
+    .hero-center {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .hero-sub-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #d4a832;
+      margin-bottom: 0.6rem;
+    }
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: #f0c050;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.9rem;
+    }
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 0.9rem auto;
+      color: #c8841a;
+    }
+    .hero-divider .line {
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: #c8841a;
+    }
+    .hero-divider .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c8841a;
+    }
+    .hero-tagline {
+      color: #d4a832;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.8rem;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-filled {
+      background: #c8841a;
+      color: #1a0e00;
+      border: 1.5px solid #c8841a;
+      padding: 0.65rem 1.6rem;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-filled:hover { background: #d4a832; border-color: #d4a832; }
+    .btn-ghost {
+      background: transparent;
+      color: #c8841a;
+      border: 1.5px solid #c8841a;
+      padding: 0.65rem 1.6rem;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { background: rgba(200,132,26,0.15); }
+
+    /* ── SECTION SHARED ── */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-variant: small-caps;
+      color: #d4a832;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      color: #f0c050;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+
+    /* ── CHANNELS ── */
+    #channels { scroll-margin-top: 70px; }
+
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .channel-card {
+      background: #1f1204;
+      border: 1px solid #5a3510;
+      border-radius: 6px;
+      padding: 1.6rem 1.4rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .channel-card:hover {
+      border-color: #c8841a;
+      box-shadow: 0 0 16px rgba(200,132,26,0.12);
+    }
+    .channel-name {
+      font-size: 1.15rem;
+      color: #f0c050;
+      font-weight: 700;
+    }
+    .channel-handle {
+      font-size: 0.8rem;
+      color: #c8841a;
+      letter-spacing: 0.03em;
+    }
+    .channel-desc {
+      font-size: 0.9rem;
+      color: #e0c080;
+      line-height: 1.55;
+      flex: 1;
+    }
+    .channel-card .btn-filled {
+      align-self: flex-start;
+      margin-top: 0.6rem;
+      font-size: 0.82rem;
+      padding: 0.5rem 1.1rem;
+    }
+
+    /* ── ADVANEDGE BAR ── */
+    .advanedge-bar {
+      background: #1a0e00;
+      border-top: 1px solid #4a2e08;
+      border-bottom: 1px solid #4a2e08;
+    }
+    .advanedge-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.92rem;
+      color: #d4a832;
+      letter-spacing: 0.02em;
+    }
+    .advanedge-inner a {
+      color: #f0c050;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .advanedge-inner a:hover { color: #d4a832; text-decoration: underline; }
+
+    /* ── LATEST VIDEOS ── */
+    #videos { scroll-margin-top: 70px; }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .video-card {
+      background: #1f1204;
+      border: 1px solid #5a3510;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .video-card:hover {
+      border-color: #c8841a;
+      box-shadow: 0 0 16px rgba(200,132,26,0.12);
+    }
+    .video-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      background: #2c1a06;
+    }
+    .video-thumb-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #2c1a06;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #5a3510;
+      font-size: 0.75rem;
+    }
+    .video-info {
+      padding: 0.9rem 1rem 1rem;
+    }
+    .video-title {
+      font-size: 0.88rem;
+      color: #f0c050;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 0.35rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .video-channel {
+      font-size: 0.75rem;
+      color: #c8841a;
+    }
+
+    .videos-loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #d4a832;
+      padding: 2rem;
+      font-size: 0.95rem;
+    }
+    .videos-error {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #c8841a;
+      padding: 2rem;
+      font-size: 0.9rem;
+      border: 1px solid #5a3510;
+      border-radius: 6px;
+      background: #1f1204;
+    }
+    .api-key-notice {
+      background: #1f1204;
+      border: 1px solid #5a3510;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      font-size: 0.88rem;
+      color: #d4a832;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .api-key-notice code {
+      background: #2c1a06;
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+      color: #f0c050;
+      font-size: 0.85em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a0e00;
+      border-top: 1px solid #4a2e08;
+      margin-top: 1rem;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.4rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-size: 0.82rem;
+      color: #d4a832;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.4rem;
+    }
+    .footer-links a {
+      font-size: 0.82rem;
+      color: #d4a832;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #f0c050; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .hero-inner {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .hero-medallions-row { gap: 1.5rem; }
+
+      .channels-grid { grid-template-columns: 1fr; }
+      .videos-grid { grid-template-columns: 1fr; }
+
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .channels-grid { grid-template-columns: repeat(2, 1fr); }
+      .videos-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">The Wisdom Network</a>
+    <ul class="nav-links">
+      <li><a href="#channels">Channels</a></li>
+      <li><a href="#videos">Videos</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#channels" onclick="closeMobileMenu()">Channels</a>
+    <a href="#videos" onclick="closeMobileMenu()">Videos</a>
+    <a href="#about" onclick="closeMobileMenu()">About</a>
+    <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-center">
+      <div class="hero-sub-label">A Content Creator Network</div>
+      <h1 class="hero-title">The Wisdom Network</h1>
+      <div class="hero-divider">
+        <span class="line"></span>
+        <span class="dot"></span>
+        <span class="line"></span>
+      </div>
+      <p class="hero-tagline">Think Deeper &nbsp;·&nbsp; Live Better &nbsp;·&nbsp; Invest Wisely</p>
+      <div class="hero-buttons">
+        <a href="#channels" class="btn-filled">Browse Channels</a>
+        <a href="#videos" class="btn-ghost">Latest Videos</a>
+      </div>
+      <div class="hero-medallions-row">
+        <img src="images/marcus-aurelius.png" alt="Marcus Aurelius"
+             onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\'medallion-placeholder\'>Marcus Aurelius</div>');" />
+        <img src="images/biblical-wisdom.jpg" alt="Biblical Wisdom Unearthed"
+             onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\'medallion-placeholder\'>Biblical Wisdom</div>');" />
+        <img src="images/stoic-investor.jpeg" alt="Stoic Investor"
+             onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\'medallion-placeholder\'>Stoic Investor</div>');" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHANNELS -->
+<section id="channels">
+  <div class="section-label">Channels</div>
+  <h2 class="section-title">Explore the network</h2>
+  <div class="channels-grid">
+
+    <div class="channel-card">
+      <div class="channel-name">Stoic Reflections</div>
+      <div class="channel-handle">@TheStoicReflectionsHub</div>
+      <p class="channel-desc">Stoic philosophy for modern life — calm, clarity, and daily purpose.</p>
+      <a href="https://www.youtube.com/@TheStoicReflectionsHub" target="_blank" rel="noopener" class="btn-filled">Watch on YouTube</a>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-name">Stoic Investor</div>
+      <div class="channel-handle">@StoicInvestDaily</div>
+      <p class="channel-desc">Mindful investing guided by stoic principles. Build wealth with patience and clarity.</p>
+      <a href="https://www.youtube.com/@StoicInvestDaily" target="_blank" rel="noopener" class="btn-filled">Watch on YouTube</a>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-name">Biblical Wisdom Unearthed</div>
+      <div class="channel-handle">@BiblicalWisdomUnearthed-zp2jj</div>
+      <p class="channel-desc">Deep dives into scripture, theology, and timeless biblical truths for modern life.</p>
+      <a href="https://www.youtube.com/@BiblicalWisdomUnearthed-zp2jj" target="_blank" rel="noopener" class="btn-filled">Watch on YouTube</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ADVANEDGE BAR -->
+<div class="advanedge-bar">
+  <div class="advanedge-inner">
+    Looking for AI consulting? Visit
+    <a href="https://www.advanedgeconsulting.com" target="_blank" rel="noopener">advanedgeconsulting.com</a>
+    for The Machine Whisperer and Advanedge Consulting AI &rarr;
+  </div>
+</div>
+
+<!-- LATEST VIDEOS -->
+<section id="videos">
+  <div class="section-label">Latest Videos</div>
+  <h2 class="section-title">Recent uploads</h2>
+  <div class="api-key-notice" id="apiKeyNotice">
+    To display live videos, replace <code>YOUR_API_KEY_HERE</code> in the
+    <code>&lt;script&gt;</code> section of this file with a valid
+    <a href="https://console.developers.google.com/" target="_blank" rel="noopener" style="color:#f0c050;">YouTube Data API v3</a> key.
+  </div>
+  <div class="videos-grid" id="videosGrid">
+    <div class="videos-loading">Loading latest videos&hellip;</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-inner">
+    <span class="footer-copy">&copy; 2026 The Wisdom Network</span>
+    <div class="footer-links">
+      <a href="#" aria-label="YouTube">YouTube</a>
+      <a href="#" aria-label="Twitter">Twitter</a>
+      <a href="#" aria-label="Instagram">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── YouTube API ──────────────────────────────────────────────────────────────
+  const YOUTUBE_API_KEY = 'AIzaSyBrlCxVrlnjCDv_RrXa_uuwRV_CJ0qYZMo';
+
+  const CHANNELS = [
+    { handle: 'TheStoicReflectionsHub',       name: 'Stoic Reflections' },
+    { handle: 'StoicInvestDaily',              name: 'Stoic Investor' },
+    { handle: 'BiblicalWisdomUnearthed-zp2jj', name: 'Biblical Wisdom Unearthed' },
+  ];
+
+  async function resolveChannelId(handle) {
+    const url = `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${YOUTUBE_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!data.items || data.items.length === 0) throw new Error(`Channel not found: ${handle}`);
+    return data.items[0].id;
+  }
+
+  async function fetchLatestVideos(channelId, channelName, count = 3) {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${count}&key=${YOUTUBE_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    return (data.items || []).map(item => ({
+      id: item.id.videoId,
+      title: item.snippet.title,
+      thumb: item.snippet.thumbnails.medium.url,
+      channel: channelName,
+    }));
+  }
+
+  function renderVideoCard(video) {
+    const card = document.createElement('a');
+    card.className = 'video-card';
+    card.href = `https://www.youtube.com/watch?v=${video.id}`;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.innerHTML = `
+      <img class="video-thumb" src="${escapeAttr(video.thumb)}" alt="${escapeAttr(video.title)}" loading="lazy" />
+      <div class="video-info">
+        <div class="video-title">${escapeHtml(video.title)}</div>
+        <div class="video-channel">${escapeHtml(video.channel)}</div>
+      </div>
+    `;
+    return card;
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escapeAttr(str) {
+    return str.replace(/"/g,'&quot;');
+  }
+
+  async function loadVideos() {
+    const grid = document.getElementById('videosGrid');
+    const notice = document.getElementById('apiKeyNotice');
+
+    if (YOUTUBE_API_KEY === 'YOUR_API_KEY_HERE') {
+      notice.style.display = 'block';
+      grid.innerHTML = `<div class="videos-error">Add your YouTube Data API v3 key to enable live video loading.</div>`;
+      return;
+    }
+
+    grid.innerHTML = '<div class="videos-loading">Loading latest videos&hellip;</div>';
+
+    try {
+      const allVideos = [];
+      for (const ch of CHANNELS) {
+        const channelId = await resolveChannelId(ch.handle);
+        const videos = await fetchLatestVideos(channelId, ch.name, 3);
+        allVideos.push(...videos);
+      }
+
+      grid.innerHTML = '';
+      if (allVideos.length === 0) {
+        grid.innerHTML = '<div class="videos-error">No videos found.</div>';
+        return;
+      }
+      allVideos.forEach(v => grid.appendChild(renderVideoCard(v)));
+    } catch (err) {
+      console.error('YouTube API error:', err);
+      grid.innerHTML = `<div class="videos-error">
+        Could not load videos. Check that your API key is valid and has the YouTube Data API v3 enabled.<br/>
+        <small style="color:#a07840;margin-top:0.5rem;display:block;">Error: ${escapeHtml(err.message)}</small>
+      </div>`;
+    }
+  }
+
+  // ── NAV hamburger ────────────────────────────────────────────────────────────
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+  });
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', false);
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  loadVideos();
+</script>
+</body>
+</html>
