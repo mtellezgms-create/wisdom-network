@@ -677,19 +677,10 @@
   const YOUTUBE_API_KEY = 'AIzaSyBrlCxVrlnjCDv_RrXa_uuwRV_CJ0qYZMo';
 
   const CHANNELS = [
-    { handle: 'TheStoicReflectionsHub',       name: 'Stoic Reflections' },
-    { handle: 'StoicInvestDaily',              name: 'Stoic Investor' },
-    { handle: 'BiblicalWisdomUnearthed-zp2jj', name: 'Biblical Wisdom Unearthed' },
+    { id: 'UCi9VtEPybMCqaWaWYGw1wVw', name: 'Stoic Reflections' },
+    { id: 'UCtz3L69QEqKA4c2Y3kO7-vg', name: 'Stoic Investor' },
+    { id: 'UC9erHe1i0K2-3-KzmkFz9Sg', name: 'Biblical Wisdom Unearthed' },
   ];
-
-  async function resolveChannelId(handle) {
-    const url = `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${YOUTUBE_API_KEY}`;
-    const res = await fetch(url, { headers: { 'Referer': 'https://stoicsage.org' } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    if (!data.items || data.items.length === 0) throw new Error(`Channel not found: ${handle}`);
-    return data.items[0].id;
-  }
 
   async function fetchLatestVideos(channelId, channelName, count = 3) {
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${count}&key=${YOUTUBE_API_KEY}`;
@@ -742,8 +733,7 @@
     try {
       const allVideos = [];
       for (const ch of CHANNELS) {
-        const channelId = await resolveChannelId(ch.handle);
-        const videos = await fetchLatestVideos(channelId, ch.name, 3);
+        const videos = await fetchLatestVideos(ch.id, ch.name, 3);
         allVideos.push(...videos);
       }
 
