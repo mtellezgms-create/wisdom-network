@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
   <title>The Wisdom Network</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -683,7 +684,7 @@
 
   async function resolveChannelId(handle) {
     const url = `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${YOUTUBE_API_KEY}`;
-    const res = await fetch(url);
+    const res = await fetch(url, { headers: { 'Referer': 'https://stoicsage.org' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!data.items || data.items.length === 0) throw new Error(`Channel not found: ${handle}`);
@@ -692,7 +693,7 @@
 
   async function fetchLatestVideos(channelId, channelName, count = 3) {
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${count}&key=${YOUTUBE_API_KEY}`;
-    const res = await fetch(url);
+    const res = await fetch(url, { headers: { 'Referer': 'https://stoicsage.org' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     return (data.items || []).map(item => ({
