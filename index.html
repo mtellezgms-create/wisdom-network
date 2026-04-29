@@ -682,17 +682,39 @@
     { id: 'UC9erHe1i0K2-3-KzmkFz9Sg', name: 'Biblical Wisdom Unearthed' },
   ];
 
+  const CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms
+
+  function getCached(key) {
+    try {
+      const entry = JSON.parse(localStorage.getItem(key));
+      if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.data;
+    } catch (e) {}
+    return null;
+  }
+
+  function setCache(key, data) {
+    try {
+      localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+    } catch (e) {}
+  }
+
   async function fetchLatestVideos(channelId, channelName, count = 3) {
+    const cacheKey = `yt_videos_${channelId}`;
+    const cached = getCached(cacheKey);
+    if (cached) return cached;
+
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${count}&key=${YOUTUBE_API_KEY}`;
     const res = await fetch(url, { headers: { 'Referer': 'https://stoicsage.org' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    return (data.items || []).map(item => ({
+    const videos = (data.items || []).map(item => ({
       id: item.id.videoId,
       title: item.snippet.title,
       thumb: item.snippet.thumbnails.medium.url,
       channel: channelName,
     }));
+    setCache(cacheKey, videos);
+    return videos;
   }
 
   function renderVideoCard(video) {
